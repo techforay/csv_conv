@@ -49,15 +49,31 @@ def combine_csvs(directory, output_file):
 
 
 if __name__ == "__main__":
-    # Define source directory relative to the script location
-    source_dir = "csv_files"
+    # Find all directories in the current path
+    dirs = [d for d in os.listdir('.') if os.path.isdir(d)]
+    
+    # Filter out hidden directories
+    dirs = [d for d in dirs if not d.startswith('.')]
 
-    # Check if the source directory exists
-    if not os.path.isdir(source_dir):
-        print(f"Error: Source directory not found at '{source_dir}'. Please create it and place your CSV files inside.")
+    if not dirs:
+        print("No directories found in the current path.")
         exit()
 
-    # Proceed with combining CSVs directly from the source directory
+    print("Please choose a directory to process:")
+    for i, dirname in enumerate(dirs):
+        print(f"{i + 1}: {dirname}")
+
+    choice = -1
+    while choice < 1 or choice > len(dirs):
+        try:
+            choice = int(input(f"Enter a number (1-{len(dirs)}): "))
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+    source_dir = dirs[choice - 1]
+
+    # Proceed with combining CSVs from the selected directory
     output_filename = "combined_trips.csv"
+    print(f"Processing directory: {source_dir}")
     print("Starting CSV combination process...")
     combine_csvs(source_dir, output_filename)
